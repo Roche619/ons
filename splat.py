@@ -43,7 +43,7 @@ if image_file is not None:
     
     effect = st.sidebar.selectbox("Select type of image manipulation you want to experiment with",
          ["Reflect on Diagonal", "Edge Enhancement", "Modify Adjacent Pixel Values", "Swap RGB Channel Values",
-          "Multiplication by Mathematical Constants and Functions"])    
+          "Multiplication by Mathematical Constants and Functions", "Splatter Effect"])    
     
     output_image = resized_image.copy()
 
@@ -69,11 +69,13 @@ if image_file is not None:
        
     elif effect == "Edge Enhancement":
         st.markdown("## Edge Enhancement") 
+        st.text("- Threshold value determines how the pixel values are assigned")
+        st.text("- Value 1 is assigned if the input image pixel value is above the selected threshold")
+        st.text("- Value 2 is assigned if the input image pixel value is below the selected threshold")
     
-        st.sidebar.markdown("### Select the values for threshold, value_1 and value_2 to modify the image")
-        threshold = st.sidebar.number_input("Input the threshold value", value=128, min_value=0, max_value=255)
-        value_1 = st.sidebar.number_input("Input value 1", value=0, min_value=0, max_value=255)
-        value_2 = st.sidebar.number_input("Input value 2", value=255, min_value=0, max_value=255)
+        threshold = st.sidebar.number_input("Threshold", value=128, min_value=0, max_value=255)
+        value_1 = st.sidebar.number_input("Value 1", value=0, min_value=0, max_value=255)
+        value_2 = st.sidebar.number_input("Value 2", value=255, min_value=0, max_value=255)
     
         for r in range(resized_image.shape[0]):
             for c in range(resized_image.shape[1]):
@@ -99,8 +101,10 @@ if image_file is not None:
         
     elif effect == "Modify Adjacent Pixel Values":
         st.markdown("## Modify Adjacent Pixel Values") 
+        st.text("This takes the values on either side of the current pixel, performs the selected action,")
+        st.text("then replaces the current pixel with that new value.")
 
-        np_choice = st.sidebar.selectbox("Select the NumPy function to use", ["sum", "average", "maximum", "minimum"])
+        np_choice = st.sidebar.selectbox("Select the modification to perform", ["sum", "average", "maximum", "minimum"])
         if np_choice == "sum":
             numpy_func = np.sum
         elif np_choice == "average":
@@ -222,4 +226,41 @@ if image_file is not None:
                 output_image.itemset((r,c,1), resized_image.item((r,c,1)) * maths_func)
                 output_image.itemset((r,c,2), resized_image.item((r,c,2)) * maths_func)
 
+        display_figures(resized_image, output_image)
+        
+    elif effect == "Splatter Effect":
+        st.markdown("## Splatter Effect") 
+    
+        distribution = st.sidebar.radio("Select type of random distribution to use", ["Uniform", "Normal"])
+        diameter = st.sidebar.slider("Select the diameter to use", 0, 100, 20)
+    
+        if distribution == "Uniform":
+            for r in range(resized_image.shape[0]):
+                for c in range(resized_image.shape[1]):
+                    r1 = r + math.ceil(np.random.uniform(-0.5,0.5) * diameter)
+                    c1 = c + math.ceil(np.random.uniform(-0.5,0.5) * diameter)
+                
+                    if(is_outside(r1, c1, resized_image.shape)):
+                        output_image.itemset((r,c,0), 0)
+                        output_image.itemset((r,c,1), 0)
+                        output_image.itemset((r,c,2), 0)
+                    else:
+                        output_image.itemset((r,c,0), resized_image.item((r1,c1,0)))
+                        output_image.itemset((r,c,1), resized_image.item((r1,c1,1)))
+                        output_image.itemset((r,c,2), resized_image.item((r1,c1,2)))
+
+        elif distribution == "Normal":
+            for r in range(resized_image.shape[0]):
+                for c in range(resized_image.shape[1]):
+                    r1 = r + math.ceil(np.random.normal(-0.5,0.5) * diameter)
+                    c1 = c + math.ceil(np.random.normal(-0.5,0.5) * diameter)
+                
+                    if(is_outside(r1, c1, resized_image.shape)):
+                        output_image.itemset((r,c,0), 0)
+                        output_image.itemset((r,c,1), 0)
+                        output_image.itemset((r,c,2), 0)
+                    else:
+                        output_image.itemset((r,c,0), resized_image.item((r1,c1,0)))
+                        output_image.itemset((r,c,1), resized_image.item((r1,c1,1)))
+                        output_image.itemset((r,c,2), resized_image.item((r1,c1,2)))
         display_figures(resized_image, output_image)
