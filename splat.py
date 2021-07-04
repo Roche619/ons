@@ -38,11 +38,12 @@ if image_file is not None:
     image_file = Image.open(image_file)
     input_image = np.array(image_file.convert('RGB'))
 
-    sf1 = st.sidebar.slider("Enter the scale factor to use in resizing image", 0.0, 100.0, 100.0)
+    sf1 = st.sidebar.slider("Select the scale factor to use in resizing image", 0.0, 100.0, 100.0)
     resized_image = image_resize(input_image, sf1)
     
     effect = st.sidebar.selectbox("Select type of image manipulation you want to experiment with",
-         ["Reflect on Diagonal", "Edge Enhancement", "NumPy Generated Values", "Swap RGB Channels"])    
+         ["Reflect on Diagonal", "Edge Enhancement", "Modify Adjacent Pixel Values", "Swap RGB Channel Values",
+          "Multiplication by Mathematical Constants and Functions"])    
     
     output_image = resized_image.copy()
 
@@ -96,7 +97,9 @@ if image_file is not None:
         display_figures(resized_image, output_image)
         
         
-    elif effect == "NumPy Generated Values":
+    elif effect == "Modify Adjacent Pixel Values":
+        st.markdown("## Modify Adjacent Pixel Values") 
+
         np_choice = st.sidebar.selectbox("Select the NumPy function to use", ["sum", "average", "maximum", "minimum"])
         if np_choice == "sum":
             numpy_func = np.sum
@@ -119,7 +122,9 @@ if image_file is not None:
                     output_image.itemset((r,c,2), numpy_func([resized_image.item((r,c,0)), resized_image.item((r,c,1))]))
         display_figures(resized_image, output_image)
         
-    elif effect == "Swap RGB Channels":
+    elif effect == "Swap RGB Channel Values":
+        st.markdown("## Swap RGB Channel Values") 
+
         channel_choice = st.sidebar.select_slider("Select the channel value", list(range(1,28)))
         if channel_choice == 1:
             c1, c2, c3 = 0, 0, 0
@@ -187,4 +192,34 @@ if image_file is not None:
                     val_1 = output_image.item((r,c,c2))
                     val_2 = output_image.item((r,c,c3))
                 output_image[r,c] = (val_0,val_1,val_2)
+        display_figures(resized_image, output_image)
+        
+    elif effect == "Multiplication by Mathematical Constants and Functions":
+        st.markdown("## Multiplication by Mathematical Constants and Functions")
+        
+        maths_choice = st.sidebar.selectbox("Select the mathematical option to use",
+                                            ["e", "pi", "tau", "trig"])
+        if maths_choice == "e":
+            maths_func = math.e
+        elif maths_choice == "pi":
+            maths_func = math.pi
+        elif maths_choice == "tau":
+            maths_func = math.tau
+        elif maths_choice == "trig":
+            trig_choice = st.sidebar.selectbox("Select the trigonometric function to use", ["sin", "cos", "tan"])
+            angle = st.sidebar.slider("Select the angle to use", 0.0, 360.0, 180.0)
+            
+            if trig_choice == "sin":
+                maths_func = math.sin(angle)
+            elif trig_choice == "cos":
+                maths_func = math.cos(angle)
+            elif trig_choice == "tan":
+                maths_func = math.tan(angle)
+            
+        for r in range(resized_image.shape[0]):
+            for c in range(resized_image.shape[1]):
+                output_image.itemset((r,c,0), resized_image.item((r,c,0)) * maths_func)
+                output_image.itemset((r,c,1), resized_image.item((r,c,1)) * maths_func)
+                output_image.itemset((r,c,2), resized_image.item((r,c,2)) * maths_func)
+
         display_figures(resized_image, output_image)
