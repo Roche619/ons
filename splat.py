@@ -5,7 +5,7 @@ import numpy as np
 import cv2
 import math
 
-st.title("Exploring the wonderful world of image manipulation with OpenCV")
+st.title("Exploring the wonderful world of image manipulation with OpenCV and NumPy")
 
 def image_resize(image, scale_factor):
     scale_factor = scale_factor
@@ -41,47 +41,57 @@ if image_file is not None:
     sf1 = st.sidebar.slider("Enter the scale factor to use in resizing image", 0.0, 100.0, 100.0)
     resized_image = image_resize(input_image, sf1)
     
-    st.markdown("## Distortion")
-
-    output_image = resized_image.copy()
-    dim = output_image.shape[0]
-    output_image = output_image[:dim,:dim,:3]
-    for r in range(output_image.shape[0]):
-        for c in range(output_image.shape[1]):
-            if(is_outside(r, c, resized_image.shape)):
-                output_image.itemset((r,c,0), 0)
-                output_image.itemset((r,c,1), 0)
-                output_image.itemset((r,c,2), 0)
-            else:
-                val_0 = output_image.item((c,r,0))
-                val_1 = output_image.item((c,r,1))
-                val_2 = output_image.item((c,r,2))
-
-            output_image[r,c] = (val_0,val_1,val_2)
+    effect = st.sidebar.selectbox("Select type of image manipulation you want to experiment with",
+         ["Reflect on Diagonal", "Edge Enhancement"])    
     
-    display_figures(resized_image, output_image)
-    
-    st.markdown("## Using `math` functions to modify image") 
-    
-    output_image = resized_image.copy()
+    if effect == "Reflect on Diagonal":
+        st.markdown("## Reflect on Diagonal")
 
-    for r in range(resized_image.shape[0]):
-        for c in range(resized_image.shape[1]):
-            if resized_image.item((r,c,1)) >= 128:
-                r1 = 128
-            else:
-                r1 = math.ceil(r / 20)
-            if resized_image.item((r,c,1)) >= 128:
-                c1 = 128
-            else:
-                c1 = math.ceil(c / 20)
+        output_image = resized_image.copy()
+        dim = output_image.shape[0]
+        output_image = output_image[:dim,:dim,:3]
+        for r in range(output_image.shape[0]):
+            for c in range(output_image.shape[1]):
+                if(is_outside(r, c, resized_image.shape)):
+                    output_image.itemset((r,c,0), 0)
+                    output_image.itemset((r,c,1), 0)
+                    output_image.itemset((r,c,2), 0)
+                else:
+                    val_0 = output_image.item((c,r,0))
+                    val_1 = output_image.item((c,r,1))
+                    val_2 = output_image.item((c,r,2))
+
+                output_image[r,c] = (val_0,val_1,val_2)
+    
+        display_figures(resized_image, output_image)
+       
+    elif effect == "Edge Enhancement":
+        st.markdown("## Edge Enhancement") 
+    
+        st.sidebar.markdown("### Select the values for threshold, value_1 and value_2 to modify the image")
+        threshold = st.sidebar.number_input("Input the threshold value", value=128, min_value=0, max_value=255)
+        value_1 = st.sidebar.number_input("Input value 1", value=0, min_value=0, max_value=255)
+        value_2 = st.sidebar.number_input("Input value 2", value=255, min_value=0, max_value=255)
+    
+        output_image = resized_image.copy()
+
+        for r in range(resized_image.shape[0]):
+            for c in range(resized_image.shape[1]):
+                if resized_image.item((r,c,1)) >= threshold:
+                    r1 = value_1
+                else:
+                    r1 = value_2
+                if resized_image.item((r,c,1)) >= threshold:
+                    c1 = value_1
+                else:
+                    c1 = value_2
                 
-            if(is_outside(r1, c1, resized_image.shape)):
-                output_image.itemset((r,c,0), 0)
-                output_image.itemset((r,c,1), 0)
-                output_image.itemset((r,c,2), 0)
-            else:
-                output_image.itemset((r,c,0), resized_image.item((r1,c1,0)))
-                output_image.itemset((r,c,1), resized_image.item((r1,c1,1)))
-                output_image.itemset((r,c,2), resized_image.item((r1,c1,2)))
-    display_figures(resized_image, output_image)
+                if(is_outside(r1, c1, resized_image.shape)):
+                    output_image.itemset((r,c,0), 0)
+                    output_image.itemset((r,c,1), 0)
+                    output_image.itemset((r,c,2), 0)
+                else:
+                    output_image.itemset((r,c,0), resized_image.item((r1,c1,0)))
+                    output_image.itemset((r,c,1), resized_image.item((r1,c1,1)))
+                    output_image.itemset((r,c,2), resized_image.item((r1,c1,2)))
+        display_figures(resized_image, output_image)
