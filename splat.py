@@ -39,7 +39,8 @@ with streamlit_analytics.track():
         image_file = Image.open(image_file)
         input_image = np.array(image_file.convert('RGB'))
 
-        resized_image = image_resize(input_image, 25)
+        sf1 = st.sidebar.slider("Select the scale factor to use in resizing image", 0.0, 100.0, 15.0)
+        resized_image = image_resize(input_image, sf1)
 
         effect = st.sidebar.selectbox("Select type of image manipulation you want to experiment with",
              ["Reflect on Diagonal", "Edge Enhancement", "Modify Adjacent Pixel Values", "Swap RGB Channel Values",
