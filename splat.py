@@ -73,6 +73,8 @@ with streamlit_analytics.track():
             st.text("- Threshold value determines how the pixel values are assigned")
             st.text("- Value 1 is assigned if the input image pixel value is above the selected threshold")
             st.text("- Value 2 is assigned if the input image pixel value is below the selected threshold")
+            st.text("There is a race condition bug that needs sorting. If you get an error, just make a selection")
+            st.text("of any of the values and the processing will continue okay.")
 
             threshold = st.sidebar.number_input("Threshold", value=128, min_value=0, max_value=255)
             value_1 = st.sidebar.number_input("Value 1", value=0, min_value=0, max_value=255)
