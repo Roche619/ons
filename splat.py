@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Jul  3 2021
+
+@author: Eric Gitonga
+"""
+
 import streamlit as st
 import streamlit_analytics
 from PIL import Image
