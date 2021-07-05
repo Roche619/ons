@@ -23,7 +23,7 @@ def image_resize(image, scale_factor):
 
     return cv2.resize(image, dimensions)    
 
-def is_outside(r, c, shape):
+def is_pixel_value_outside_limits(r, c, shape):
     if(c < 0 or c >= shape[1]):
         return True
     if(r < 0 or r >= shape[0]):
@@ -63,7 +63,7 @@ with streamlit_analytics.track():
             output_image = output_image[:dim,:dim,:3]
             for r in range(output_image.shape[0]):
                 for c in range(output_image.shape[1]):
-                    if(is_outside(r, c, resized_image.shape)):
+                    if(is_pixel_value_outside_limits(r, c, resized_image.shape)):
                         output_image.itemset((r,c,0), 0)
                         output_image.itemset((r,c,1), 0)
                         output_image.itemset((r,c,2), 0)
@@ -99,7 +99,7 @@ with streamlit_analytics.track():
                     else:
                         c1 = value_2
 
-                    if(is_outside(r1, c1, resized_image.shape)):
+                    if(is_pixel_value_outside_limits(r1, c1, resized_image.shape)):
                         output_image.itemset((r,c,0), 0)
                         output_image.itemset((r,c,1), 0)
                         output_image.itemset((r,c,2), 0)
@@ -127,7 +127,7 @@ with streamlit_analytics.track():
 
             for r in range(resized_image.shape[0]):
                 for c in range(resized_image.shape[1]):
-                    if(is_outside(r, c, resized_image.shape)):
+                    if(is_pixel_value_outside_limits(r, c, resized_image.shape)):
                         output_image.itemset((r,c,0), 0)
                         output_image.itemset((r,c,1), 0)
                         output_image.itemset((r,c,2), 0)
@@ -198,7 +198,7 @@ with streamlit_analytics.track():
 
             for r in range(output_image.shape[0]):
                 for c in range(output_image.shape[1]):
-                    if(is_outside(r, c, resized_image.shape)):
+                    if(is_pixel_value_outside_limits(r, c, resized_image.shape)):
                         output_image.itemset((r,c,0), 0)
                         output_image.itemset((r,c,1), 0)
                         output_image.itemset((r,c,2), 0)
@@ -251,7 +251,7 @@ with streamlit_analytics.track():
                         r1 = r + math.ceil(np.random.uniform(-0.5,0.5) * diameter)
                         c1 = c + math.ceil(np.random.uniform(-0.5,0.5) * diameter)
 
-                        if(is_outside(r1, c1, resized_image.shape)):
+                        if(is_pixel_value_outside_limits(r1, c1, resized_image.shape)):
                             output_image.itemset((r,c,0), 0)
                             output_image.itemset((r,c,1), 0)
                             output_image.itemset((r,c,2), 0)
@@ -266,7 +266,7 @@ with streamlit_analytics.track():
                         r1 = r + math.ceil(np.random.normal(-0.5,0.5) * diameter)
                         c1 = c + math.ceil(np.random.normal(-0.5,0.5) * diameter)
 
-                        if(is_outside(r1, c1, resized_image.shape)):
+                        if(is_pixel_value_outside_limits(r1, c1, resized_image.shape)):
                             output_image.itemset((r,c,0), 0)
                             output_image.itemset((r,c,1), 0)
                             output_image.itemset((r,c,2), 0)
