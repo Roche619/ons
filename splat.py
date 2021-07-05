@@ -51,7 +51,8 @@ with streamlit_analytics.track():
         resized_image = image_resize(input_image, sf1)
 
         effect = st.sidebar.selectbox("Select type of image manipulation you want to experiment with",
-             ["Reflect on Diagonal", "Edge Enhancement", "Modify Adjacent Pixel Values", "Swap RGB Channel Values",
+             ["Reflect on Diagonal", "Assign Pixel Value Based on Threshold",
+              "Modify Adjacent Pixel Values", "Swap RGB Channel Values",
               "Multiplication by Mathematical Constants and Functions", "Splatter Effect"])    
 
         output_image = resized_image.copy()
@@ -76,8 +77,8 @@ with streamlit_analytics.track():
 
             display_figures(resized_image, output_image)
 
-        elif effect == "Edge Enhancement":
-            st.markdown("## Edge Enhancement") 
+        elif effect == "Assign Pixel Value Based on Threshold":
+            st.markdown("## Assign Pixel Value Based on Threshold") 
             st.text("- Threshold value determines how the pixel values are assigned")
             st.text("- Value 1 is assigned if the input image pixel value is above the selected threshold")
             st.text("- Value 2 is assigned if the input image pixel value is below the selected threshold")
