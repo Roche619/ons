@@ -45,7 +45,7 @@ with streamlit_analytics.track():
 
     if image_file is not None:
         image_file = Image.open(image_file)
-        input_image = np.array(image_file.convert('RGB'))
+        input_image = np.array(image_file)
 
         sf1 = st.sidebar.slider("Select the scale factor to use in resizing image", 0.0, 100.0, 15.0)
         resized_image = image_resize(input_image, sf1)
