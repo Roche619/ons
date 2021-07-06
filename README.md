@@ -1,1 +1,1 @@
-# Splatting Images
+# Explorinig OpenCV, NumPy and Streamlit
