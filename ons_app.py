@@ -46,7 +46,22 @@ with streamlit_analytics.track():
         image_file = Image.open(image_file)
         input_image = np.array(image_file)
 
-        sf1 = st.sidebar.slider("Select the scale factor to use in resizing image", 0.0, 100.0, 15.0)
-        resized_image = image_resize(input_image, sf1)
-        output_image = image_resize(resized_image,50)
-        display_figures(resized_image, output_image)
+        effect = st.sidebar.selectbox("Select type of image manipulation you want to experiment with",
+             ["Resize Image", "Flip Image"])
+        
+        if effect == "Resize Image":
+            sf1 = st.sidebar.slider("Select the scale factor to use in resizing image", 5.0, 30.0, 15.0)
+            output_image = image_resize(input_image, sf1)
+            display_figures(input_image, output_image)
+
+        if effect == "Flip Image":
+            mirror_choice = st.sidebar.selectbox("Choose  how to flip the image",
+                                 ["Horizontally", "Vertically", "Both"])
+            if mirror_choice == "Horizontally":
+                output_image = cv2.flip(input_image,1)
+            elif mirror_choice == "Vertically":
+                output_image = cv2.flip(input_image,0)
+            else:
+                output_image = cv2.flip(input_image,-1)
+                
+            display_figures(input_image, output_image)
