@@ -2,3 +2,4 @@
 temp/
 ons-part*.ipynb
 .spyproject/
+.streamlit/config.toml
