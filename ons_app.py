@@ -52,7 +52,8 @@ with streamlit_analytics.track():
         if effect == "Resize Image":
             sf1 = st.sidebar.slider("Select the scale factor to use in resizing image", 5.0, 30.0, 15.0)
             output_image = image_resize(input_image, sf1)
-            display_figures(input_image, output_image)
+            if st.button("Process Image"):
+                display_figures(input_image, output_image)
 
         if effect == "Flip Image":
             mirror_choice = st.sidebar.selectbox("Choose  how to flip the image",
@@ -63,5 +64,6 @@ with streamlit_analytics.track():
                 output_image = cv2.flip(input_image,0)
             else:
                 output_image = cv2.flip(input_image,-1)
-                
-            display_figures(input_image, output_image)
+            
+            if st.button("Process Image"):
+                display_figures(input_image, output_image)
