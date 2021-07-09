@@ -22,3 +22,31 @@ st.set_page_config(
 
 st.title("Super Basic Photo Editor")
 
+def image_resize(image, scale_factor):
+    scale_factor = scale_factor
+    height = int(image.shape[0] * scale_factor/100)
+    width = int(image.shape[1] * scale_factor/100)
+    dimensions = (width,height)
+
+    return cv2.resize(image, dimensions)
+
+def display_figures(img1, img2):
+    fig1_left, fig2_right = st.beta_columns(2)
+    with fig1_left:
+        st.markdown("### Original image")
+        st.image(img1)
+    with fig2_right:
+        st.markdown("### Processed image")
+        st.image(img2)
+
+with streamlit_analytics.track():
+    image_file = st.file_uploader("Upload an image file", type=["jpg","png","tif"])
+
+    if image_file is not None:
+        image_file = Image.open(image_file)
+        input_image = np.array(image_file)
+
+        sf1 = st.sidebar.slider("Select the scale factor to use in resizing image", 0.0, 100.0, 15.0)
+        resized_image = image_resize(input_image, sf1)
+        output_image = image_resize(resized_image,50)
+        display_figures(resized_image, output_image)
