@@ -54,7 +54,7 @@ with streamlit_analytics.track():
             output_image = image_resize(input_image, sf1)
 
         if effect == "Flip Image":
-            mirror_choice = st.sidebar.selectbox("Choose  how to flip the image",
+            mirror_choice = st.sidebar.radio("Choose  how to flip the image",
                                  ["Horizontally", "Vertically", "Both"])
             if mirror_choice == "Horizontally":
                 output_image = cv2.flip(input_image,1)
