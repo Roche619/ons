@@ -47,7 +47,7 @@ with streamlit_analytics.track():
         input_image = np.array(image_file)
 
         effect = st.sidebar.selectbox("Select type of image manipulation you want to experiment with",
-             ["Resize Image", "Flip Image"])
+             ["Resize Image", "Flip Image", "Brightness & Contrast"])
         
         if effect == "Resize Image":
             sf1 = st.sidebar.slider("Select the scale factor to use in resizing image", 0.1, 30.0, 15.0)
@@ -62,7 +62,24 @@ with streamlit_analytics.track():
                 output_image = cv2.flip(input_image,0)
             else:
                 output_image = cv2.flip(input_image,-1)
-            
+        
+        if effect == "Brightness & Contrast":
+            #Slider has to be integers or it won't work...
+            brightness_factor = st.sidebar.slider("Use the slider to change image brightness", -127,127,0)
+            if brightness_factor < 0:
+                darker = np.ones(input_image.shape, dtype="uint8") * -(brightness_factor)
+                output_image = cv2.subtract(input_image, darker)
+            else:
+                lighter = np.ones(input_image.shape, dtype="uint8") * brightness_factor
+                output_image = cv2.add(input_image, lighter)
+                
+            contrast_factor = st.sidebar.slider("Use the slider to change image contrast", -127,127,0)
+            if contrast_factor < 0:
+                lower = np.ones(output_image.shape) * contrast_factor
+                output_image = np.uint8(cv2.multiply(np.float64(output_image), lower))
+            elif contrast_factor > 0:
+                higher = np.ones(output_image.shape) * contrast_factor
+                output_image = np.uint8(np.clip(cv2.multiply(np.float64(output_image), higher), 0, 255))
 #        if st.button("Process Image"):
 #            display_figures(input_image, output_image)
         display_figures(input_image, output_image)
