@@ -40,7 +40,7 @@ def display_figures(img1, img2):
         st.image(img2)
 
 with streamlit_analytics.track():
-    image_file = st.file_uploader("Upload an image file", type=["jpg","png","tif"])
+    image_file = st.sidebar.file_uploader("Upload an image file", type=["jpg","png","tif"])
 
     if image_file is not None:
         image_file = Image.open(image_file)
