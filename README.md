@@ -1,1 +1,1 @@
-# Explorinig OpenCV, NumPy and Streamlit (ONS)
+# Exploring OpenCV, NumPy, and Streamlit (ONS)
